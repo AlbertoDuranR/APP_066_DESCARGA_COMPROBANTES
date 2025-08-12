@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 class FormPage:
-    def goToForm(self, driver, *, filtro="recibido", rucEmisor=20100055237):
+    def goToForm(self, driver, rucEmisor, serie, correlativo):
         # 0) entrar al iframe
         iframe = waitVisible(driver, (By.ID, "iframeApplication"))
         driver.switch_to.frame(iframe)
@@ -19,7 +19,7 @@ class FormPage:
 
 
         # 1) seleccionar filtro (clic al LABEL, luego verificamos el input)
-        label = waitClickable(driver, (By.CSS_SELECTOR, f"label.custom-control-label[for='{filtro}']"))
+        label = waitClickable(driver, (By.CSS_SELECTOR, f"label.custom-control-label[for='recibido']"))
         driver.execute_script("arguments[0].scrollIntoView({block:'center'});", label)
         driver.execute_script("arguments[0].click();", label)
 
@@ -36,19 +36,17 @@ class FormPage:
 
         # 3) Tipo de comprobante (dropdown PrimeNG)
         time.sleep(3)
-        tipoComprobante = "Factura"
         dd = waitClickable(driver, (By.CSS_SELECTOR, "p-dropdown[formcontrolname='tipoComprobanteI'] .p-dropdown"))
         driver.execute_script("arguments[0].click();", dd)
         opcion = waitClickable(
             driver,
-            (By.XPATH, f"//li[@role='option']//span[normalize-space()='{tipoComprobante}']/ancestor::li")
+            (By.XPATH, f"//li[@role='option']//span[normalize-space()='Factura']/ancestor::li")
         )
         driver.execute_script("arguments[0].click();", opcion)
 
 
         # 4) Serie
         time.sleep(2)
-        serie = "F348"
         serie_inp = waitVisible(driver, (By.CSS_SELECTOR, "input[formcontrolname='serieComprobante']"))
         serie_inp.clear()
         serie_inp.send_keys(serie)
@@ -57,7 +55,6 @@ class FormPage:
 
         # 5) Número de comprobante
         time.sleep(1)
-        correlativo = "99706"
         correlativo_inp = waitVisible(driver, (By.CSS_SELECTOR, "input[formcontrolname='numeroComprobante']"))
         correlativo_inp.clear()
         correlativo_inp.send_keys(correlativo)

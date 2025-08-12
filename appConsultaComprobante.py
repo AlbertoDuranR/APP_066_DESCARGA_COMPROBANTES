@@ -8,6 +8,9 @@ import time
 def main():
     driver = getDriver()
     try:
+        rucEmisor = "20100055237"
+        serie = "F348"
+        correlativo = "99706"
         LoginPage().login(driver)
         MenuPage().goToConsultaComprobantes(driver)
         FormPage().goToForm(driver)
