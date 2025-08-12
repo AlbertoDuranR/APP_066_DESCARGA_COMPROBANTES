@@ -2,6 +2,7 @@
 from io import BytesIO
 from flask import Flask, render_template, request, abort, send_file, jsonify
 from flask_cors import CORS
+import time
 
 # Helpers / Pages
 from utils.helpers import getDriver
@@ -38,6 +39,7 @@ def runConsultaGuia(rucEmisor: str, serie: str, numero: str):
     try:
         LoginPage().login(driver)
         MenuGuiaPage().goToGuiasRemision(driver)
+        time.sleep(5)
         FormGuiaPage().goToForm(driver, serie, numero)  # tu FormPage usa (serie, numero)
         return DownloadGuiaPage().downloadXML(driver)
     finally:
@@ -69,17 +71,19 @@ def apiComprobantes():
 @app.post('/api/guias')
 def apiGuias():
     data = request.get_json(force=True, silent=True) or {}
-    ruc = data.get('rucEmisor') or data.get('ruc')
+    # Para guías NO pedimos RUC
     serie = data.get('serie')
     numero = data.get('numero') or data.get('correlativo')
-    if not all([ruc, serie, numero]):
-        abort(400, description="Parámetros requeridos: rucEmisor (o ruc), serie, numero/correlativo.")
 
-    filename, bio, mime = runConsultaGuia(ruc, serie, numero)
+    if not all([serie, numero]):
+        abort(400, description="Parámetros requeridos: serie y numero/correlativo.")
+
+    filename, bio, mime = runConsultaGuia("", serie, numero)  # Pasamos RUC vacío
     if not filename or not bio:
         abort(500, description="No se pudo descargar el XML de la guía.")
     bio.seek(0)
     return send_file(bio, as_attachment=True, download_name=filename, mimetype=mime)
+
 
 @app.get('/health')
 def health():
