@@ -11,7 +11,7 @@ def main():
         LoginPage().login(driver)
         MenuPage().goToConsultaComprobantes(driver)
         FormPage().goToForm(driver)
-        time.sleep(5)
+        time.sleep(3)
         DownloadPage().downloadXML(driver)
         
         print("✅ Navegación completada.")
