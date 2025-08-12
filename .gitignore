@@ -13,3 +13,4 @@
 # Ignorar los tests individuales
 /tests/*
 
+/temp/*

@@ -1,8 +1,8 @@
 from utils.helpers import getDriver
 from pages.loginPage import LoginPage
-from pages.menuPage import MenuPage
-from pages.formPage import FormPage
-from pages.download import DownloadPage
+from pages.menuPageConsultaComprobante import MenuPage
+from pages.formPageConsultaComprobante import FormPage
+from pages.downloadConsultaComprobante import DownloadPage
 import time
 
 def main():
@@ -12,7 +12,7 @@ def main():
         MenuPage().goToConsultaComprobantes(driver)
         FormPage().goToForm(driver)
         time.sleep(5)
-        DownloadPage().downloadPDF(driver)
+        DownloadPage().downloadXML(driver)
         
         print("✅ Navegación completada.")
     except Exception as e:
