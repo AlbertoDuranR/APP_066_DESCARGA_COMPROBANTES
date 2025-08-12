@@ -13,7 +13,7 @@ def main():
         correlativo = "99706"
         LoginPage().login(driver)
         MenuPage().goToConsultaComprobantes(driver)
-        FormPage().goToForm(driver)
+        FormPage().goToForm(driver, rucEmisor, serie, correlativo)
         time.sleep(3)
         DownloadPage().downloadXML(driver)
         
